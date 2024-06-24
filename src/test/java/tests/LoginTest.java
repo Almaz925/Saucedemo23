@@ -11,4 +11,26 @@ public class LoginTest extends BaseTest {
         loginPage.login("standard_user", "secret_sauce");
         assertEquals(driver.findElement(By.xpath("//span[@class='title']")).getText(), "Products");
     }
+
+    @Test
+    public void emptyLogin(){
+        loginPage.open();
+        loginPage.login("", "secret_sauce");
+        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(),"Epic sadface: Username is required");
+
+    }
+
+    @Test
+    public void emptyPassword(){
+        loginPage.open();
+        loginPage.login("standard_user","");
+assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(),"Epic sadface: Password is required" );
+    }
+
+    @Test
+    public void lockedUser(){
+        loginPage.open();
+        loginPage.login("locked_out_user", "secret_sauce");
+        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(),"Epic sadface: Sorry, this user has been locked out." );
+    }
 }
