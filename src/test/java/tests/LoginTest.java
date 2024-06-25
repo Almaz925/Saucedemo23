@@ -11,7 +11,7 @@ public class LoginTest extends BaseTest {
     public void correctLogin() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
-        assertEquals(driver.findElement(By.xpath("//span[@class='title']")).getText(), "Products");
+        assertEquals(productsPage.getTitle(), "Products");
     }
 
     @Test
