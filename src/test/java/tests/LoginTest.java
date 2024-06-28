@@ -1,8 +1,8 @@
 package tests;
 
 import org.openqa.selenium.By;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 
 public class LoginTest extends BaseTest {
@@ -14,12 +14,20 @@ public class LoginTest extends BaseTest {
         assertEquals(productsPage.getTitle(), "Products");
     }
 
-    @Test
-    public void emptyLogin() {
-        loginPage.open();
-        loginPage.login("", "secret_sauce");
-        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(), "Epic sadface: Username is required");
+    @DataProvider
+    public Object[][] loginData() {
+        return new Object[][] {
+                {"","secret_sauce","Epic sadface: Username is required"},
+                {"standard_user","","Epic sadface: Password is required"},
+                {"locked_out_user","secret_sauce","Epic sadface: Sorry, this user has been locked out."}
+        };
+    }
 
+    @Test(dataProvider = "loginData")
+    public void emptyLogin(String user, String password, String expectedEror) {
+        loginPage.open();
+        loginPage.login(user, password);
+        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(), expectedEror);
     }
 
     @Test
