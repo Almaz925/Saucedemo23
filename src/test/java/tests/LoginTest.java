@@ -1,8 +1,7 @@
 package tests;
 
-import org.openqa.selenium.By;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 
 public class LoginTest extends BaseTest {
@@ -11,28 +10,22 @@ public class LoginTest extends BaseTest {
     public void correctLogin() {
         loginPage.open();
         loginPage.login("standard_user", "secret_sauce");
-        assertEquals(driver.findElement(By.xpath("//span[@class='title']")).getText(), "Products");
+        assertEquals(productsPage.getTitle(), "Products");
     }
 
-    @Test
-    public void emptyLogin() {
-        loginPage.open();
-        loginPage.login("", "secret_sauce");
-        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(), "Epic sadface: Username is required");
-
+    @DataProvider
+    public Object[][] loginData() {
+        return new Object[][] {
+                {"","secret_sauce","Epic sadface: Username is required"},
+                {"standard_user","","Epic sadface: Password is required"},
+                {"locked_out_user","secret_sauce","Epic sadface: Sorry, this user has been locked out."}
+        };
     }
 
-    @Test
-    public void emptyPassword() {
+    @Test(dataProvider = "loginData")
+    public void emptyLogin(String user, String password, String expectedError) {
         loginPage.open();
-        loginPage.login("standard_user", "");
-        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(), "Epic sadface: Password is required");
-    }
-
-    @Test
-    public void lockedUser() {
-        loginPage.open();
-        loginPage.login("locked_out_user", "secret_sauce");
-        assertEquals(driver.findElement(By.xpath("//h3[@data-test='error']")).getText(), "Epic sadface: Sorry, this user has been locked out.");
+        loginPage.login(user, password);
+        assertEquals(loginPage.getErrorMesage(), expectedError);
     }
 }
