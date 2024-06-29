@@ -42,7 +42,7 @@ public class BaseTest {
         cartPage = new CartPage(driver);
     }
 
-    @AfterMethod(alwaysRun = true) //Когда значение атрибута true, этот метод запускается всегда, если даже тест падает
+    @AfterMethod(alwaysRun = true)
     public void close() {
         driver.quit();
     }

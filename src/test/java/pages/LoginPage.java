@@ -12,7 +12,7 @@ public class LoginPage extends BasePage {
     private final By USERNAME_INPUT = By.id("user-name");
     private final By PASSWORD_INPUT = By.id("password");
     private final By LOGIN_BUTTON = By.id("login-button");
-//    private final By ERROR_MESSAGE = By.xpath("//h3[@data-test='error']");
+    private final By ERROR_MESSAGE = By.xpath("//h3[@data-test='error']");
 
     public void open() {
         driver.get(BASE_URL + "/inventory.html");
@@ -34,5 +34,9 @@ public class LoginPage extends BasePage {
 
     public void pushSubmitButton() {
         driver.findElement(LOGIN_BUTTON).submit();
+    }
+
+    public String getErrorMesage() {
+        return driver.findElement(ERROR_MESSAGE).getText();
     }
 }
